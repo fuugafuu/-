@@ -1,0 +1,10 @@
+/my-math-game
+  /api
+    ranking.js           // ランキングを取得
+    saveScore.js         // スコアを保存
+  /public
+    index.html           // フロントエンドHTML
+  /styles
+    style.css            // CSSファイル
+  package.json           // Node.js設定
+  vercel.json            // Vercel設定
