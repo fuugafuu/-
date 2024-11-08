@@ -63,3 +63,24 @@
     </script>
 </body>
 </html>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin-top: 50px;
+}
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+input[type="text"] {
+    padding: 5px;
+    font-size: 18px;
+    width: 60px;
+}
+#rankingList {
+    list-style-type: decimal;
+    padding-left: 20px;
+}
+</style>
