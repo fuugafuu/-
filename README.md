@@ -1,5 +1,3 @@
-# -
-<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -136,7 +134,7 @@
             rankingList.innerHTML = "";
             ranking.slice(0, 10).forEach((entry, index) => {
                 const li = document.createElement("li");
-                li.textContent = `第${index + 1}位: ${entry.name} - ${entry.score}点`;
+                li.textContent = 第${index + 1}位: ${entry.name} - ${entry.score}点;
                 rankingList.appendChild(li);
             });
         }
@@ -154,7 +152,7 @@
             score = 0;
             timeLeft = inputTime;
             gameOver = false;
-            document.getElementById("score").textContent = `得点: ${score}`;
+            document.getElementById("score").textContent = 得点: ${score};
             document.getElementById("answer").disabled = false;
             document.getElementById("startButton").style.display = "none";
             document.getElementById("retryButton").style.display = "none";
@@ -175,44 +173,44 @@
                 correctAnswer = num1 + num2;
                 const hintType = Math.floor(Math.random() * 3);
                 if (hintType === 0) {
-                    document.getElementById("hint").textContent = `ヒント: 足し算です。${num1} と ${num2} を足してみてください。`;
+                    document.getElementById("hint").textContent = ヒント: 足し算です。${num1} と ${num2} を足してみてください。;
                 } else if (hintType === 1) {
-                    document.getElementById("hint").textContent = `ヒント: 数字を順番に加えていく方法を使ってください。`;
+                    document.getElementById("hint").textContent = ヒント: 数字を順番に加えていく方法を使ってください。;
                 } else {
-                    document.getElementById("hint").textContent = `ヒント: ${num1} に ${num2} を加えると答えが出ます。`;
+                    document.getElementById("hint").textContent = ヒント: ${num1} に ${num2} を加えると答えが出ます。;
                 }
             } else if (operator === '-') {
                 correctAnswer = num1 - num2;
                 const hintType = Math.floor(Math.random() * 3);
                 if (hintType === 0) {
-                    document.getElementById("hint").textContent = `ヒント: 引き算です。${num1} から ${num2} を引いてみてください。`;
+                    document.getElementById("hint").textContent = ヒント: 引き算です。${num1} から ${num2} を引いてみてください。;
                 } else if (hintType === 1) {
-                    document.getElementById("hint").textContent = `ヒント: 差を求める問題です。`;
+                    document.getElementById("hint").textContent = ヒント: 差を求める問題です。;
                 } else {
-                    document.getElementById("hint").textContent = `ヒント: 最初の数から後ろの数を引いてください。`;
+                    document.getElementById("hint").textContent = ヒント: 最初の数から後ろの数を引いてください。;
                 }
             } else if (operator === '*') {
                 correctAnswer = num1 * num2;
                 const hintType = Math.floor(Math.random() * 3);
                 if (hintType === 0) {
-                    document.getElementById("hint").textContent = `ヒント: 掛け算です。${num1} と ${num2} を掛けてみてください。`;
+                    document.getElementById("hint").textContent = ヒント: 掛け算です。${num1} と ${num2} を掛けてみてください。;
                 } else if (hintType === 1) {
-                    document.getElementById("hint").textContent = `ヒント: ${num1} を ${num2} 回足した結果が答えです。`;
+                    document.getElementById("hint").textContent = ヒント: ${num1} を ${num2} 回足した結果が答えです。;
                 } else {
-                    document.getElementById("hint").textContent = `ヒント: ${num1} と ${num2} を掛け算してみてください。`;
+                    document.getElementById("hint").textContent = ヒント: ${num1} と ${num2} を掛け算してみてください。;
                 }
             } else if (operator === '/') {
                 if (num2 === 0) num2 = 1;
                 correctAnswer = Math.floor(num1 / num2);
                 const hintType = Math.floor(Math.random() * 2);
                 if (hintType === 0) {
-                    document.getElementById("hint").textContent = `ヒント: 割り算です。${num1} を ${num2} で割ってみてください。`;
+                    document.getElementById("hint").textContent = ヒント: 割り算です。${num1} を ${num2} で割ってみてください。;
                 } else {
-                    document.getElementById("hint").textContent = `ヒント: ${num1} を ${num2} 回分けると答えが得られます。`;
+                    document.getElementById("hint").textContent = ヒント: ${num1} を ${num2} 回分けると答えが得られます。;
                 }
             }
 
-            document.getElementById("problem").textContent = `${num1} ${operator} ${num2} = ?`;
+            document.getElementById("problem").textContent = ${num1} ${operator} ${num2} = ?;
             document.getElementById("result").textContent = "";
         }
 
@@ -235,10 +233,10 @@
 
             if (answer === correctAnswer) {
                 score++;
-                document.getElementById("score").textContent = `得点: ${score}`;
+                document.getElementById("score").textContent = 得点: ${score};
                 generateProblem();
             } else {
-                document.getElementById("result").textContent = `不正解！ 正しい答えは ${correctAnswer} です。`;
+                document.getElementById("result").textContent = 不正解！ 正しい答えは ${correctAnswer} です。;
             }
 
             document.getElementById("answer").value = '';
@@ -298,3 +296,59 @@
     </script>
 </body>
 </html>
+function saveScore() {
+    const playerName = prompt("名前を入力してください:");
+    if (!playerName) return;
+
+    // サーバーへスコアを送信
+    fetch('http://localhost:5000/saveScore', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name: playerName, score: score })
+    })
+    .then(response => response.json())
+    .then(data => {
+        loadRanking();
+    })
+    .catch(error => {
+        console.error('エラー:', error);
+    });
+}
+
+function loadRanking() {
+    fetch('http://localhost:5000/ranking')
+    .then(response => response.json())
+    .then(data => {
+        const rankingList = document.getElementById("rankingList");
+        rankingList.innerHTML = "";
+        data.forEach((entry, index) => {
+            const li = document.createElement("li");
+            li.textContent = `第${index + 1}位: ${entry.name} - ${entry.score}点`;
+            rankingList.appendChild(li);
+        });
+    })
+    .catch(error => {
+        console.error('エラー:', error);
+    });
+}
+// パスワード確認
+app.post('/checkAdmin', (req, res) => {
+    const { password } = req.body;
+    if (password === '44146') {
+        res.status(200).send('管理者ログイン成功');
+    } else {
+        res.status(403).send('パスワードが間違っています');
+    }
+});
+
+// ランキングのリセット
+app.post('/resetRanking', async (req, res) => {
+    try {
+        await Ranking.deleteMany({});
+        res.status(200).send("ランキングリセット成功");
+    } catch (err) {
+        res.status(500).send("ランキングリセットエラー");
+    }
+});
