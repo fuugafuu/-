@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>算数タイムアタックゲーム</title>
+    <link rel="stylesheet" href="/styles/style.css">
+</head>
+<body>
+    <h1>算数タイムアタックゲーム</h1>
+    <button id="startButton" onclick="startGame()">スタート</button>
+
+    <div id="problem"></div>
+    <input type="text" id="answer" placeholder="答えを入力">
+    <button onclick="submitAnswer()">送信</button>
+
+    <h2>ランキング</h2>
+    <ul id="rankingList"></ul>
+
+    <script>
+        // ゲーム開始
+        function startGame() {
+            // ゲームの開始処理
+            fetchRanking();
+        }
+
+        // ランキングを表示
+        function fetchRanking() {
+            fetch('/api/ranking')
+                .then(response => response.json())
+                .then(data => {
+                    const rankingList = document.getElementById("rankingList");
+                    rankingList.innerHTML = "";
+                    data.forEach((entry, index) => {
+                        const li = document.createElement("li");
+                        li.textContent = `第${index + 1}位: ${entry.name} - ${entry.score}点`;
+                        rankingList.appendChild(li);
+                    });
+                })
+                .catch(error => console.error('エラー:', error));
+        }
+
+        // スコアを送信
+        function submitAnswer() {
+            const answer = document.getElementById("answer").value;
+            const playerName = prompt("名前を入力してください:");
+            if (answer && playerName) {
+                const score = parseInt(answer); // スコアとして答えを使用
+                fetch('/api/saveScore', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name: playerName, score: score })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    fetchRanking(); // ランキングを再表示
+                })
+                .catch(error => console.error('エラー:', error));
+            }
+        }
+    </script>
+</body>
+</html>
